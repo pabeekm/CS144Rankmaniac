@@ -23,6 +23,8 @@ for line in sys.stdin:
     contrib = pagerank
     if(len(out_neighbors) != 0):
         contrib = contrib / len(out_neighbors)
+    else:
+        sys.stdout.write(str(node_id) + ":" + str(node_id) + "," + str(contrib) + "\n")
 
     # For each neighbor, output neighbor_id    node_id,rank
     for neighbor in out_neighbors:

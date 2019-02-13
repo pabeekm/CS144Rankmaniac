@@ -14,6 +14,7 @@ import sys
 node_pageranks = {}
 node_outneighbors = {}
 node_prevranks = {}
+alpha = .85
 for line in sys.stdin:
     # Get the node_id
     node_id = int((line.split(":")[0]))
@@ -23,9 +24,9 @@ for line in sys.stdin:
         in_neighbor = int((line.split(":")[1].split(",")[0]))
         pagerank = float((line.split(":")[1].split(",")[1]))
         if node_pageranks.get(node_id) == None:
-            node_pageranks[node_id] = .85 * pagerank + .15
+            node_pageranks[node_id] = alpha * pagerank + (1 - alpha)
         else:
-            node_pageranks[node_id] += pagerank * .85
+            node_pageranks[node_id] += pagerank * alpha
 
         if node_outneighbors.get(in_neighbor) == None:
             node_outneighbors[in_neighbor] = [node_id]
@@ -38,12 +39,17 @@ for line in sys.stdin:
         node_prevranks[node_id] = prev_rank
 
 # For each key reduced on, output the node_id    pagerank,prev_rank,out_neighbors
-for node_id in node_pageranks.keys():
-    if node_outneighbors.get(node_id) != None:
+for node_id in node_prevranks.keys():
+    if node_outneighbors.get(node_id) != None and node_pageranks.get(node_id) != None:
         sys.stdout.write(str(node_id) + ":" + str(node_pageranks[node_id]) + "," + 
                      str(node_prevranks[node_id]) + "," + 
                      ",".join([str(x) for x in node_outneighbors[node_id]]) + "\n")
     else:
-        sys.stdout.write(str(node_id) + ":" + str(node_pageranks[node_id]) + "," + 
+        if node_outneighbors.get(node_id) == None:
+            sys.stdout.write(str(node_id) + ":" + str(node_pageranks[node_id]) + "," + 
                      str(node_prevranks[node_id]) + "\n")
+        if node_pageranks.get(node_id) == None:
+            sys.stdout.write(str(node_id) + ":" + str(1 - alpha) + "," + 
+                     str(node_prevranks[node_id]) + "," + 
+                     ",".join([str(x) for x in node_outneighbors[node_id]]) + "\n")
 

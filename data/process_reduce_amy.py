@@ -32,7 +32,7 @@ def print_final(node):
 
     sys.stdout.write("FinalRank:" + str(pagerank) + "\t" + str(node_id) + "\n")
 
-top_20 = []
+top_30 = []
 current_min = 0
 node_list = []
 for line in sys.stdin:
@@ -53,20 +53,20 @@ for line in sys.stdin:
         out_neighbors = vals[3:]
    
 
-    if len(top_20) < 20:
-        top_20.append((node_id, pagerank, prev_rank, out_neighbors))
+    if len(top_30) < 30:
+        top_30.append((node_id, pagerank, prev_rank, out_neighbors))
         if pagerank > current_min:
-            current_min = min(top_20, key = lambda node:node[1])[1]
-        top_20 = sorted(top_20, key = lambda node:node[1], reverse=True)
+            current_min = min(top_30, key = lambda node:node[1])[1]
+        top_30 = sorted(top_30, key = lambda node:node[1], reverse=True)
     else:
         # If this belongs in the top 20, then kick out the bottom element and put it in and then sort
         sys.stderr.write("Pagerank: " + str(pagerank) + "\n")
         if pagerank > current_min:
-            kicked_out = top_20.pop()
-            print_node(kicked_out)
-            top_20.append((node_id, pagerank, prev_rank, out_neighbors))
-            current_min = min(top_20, key = lambda node:node[1])[1]
-            top_20 = sorted(top_20, key = lambda node:node[1], reverse=True)
+            kicked_out = top_30.pop()
+            print_node(kicked_out, node_list)
+            top_30.append((node_id, pagerank, prev_rank, out_neighbors))
+            current_min = min(top_30, key = lambda node:node[1])[1]
+            top_30 = sorted(top_30, key = lambda node:node[1], reverse=True)
         # Otherwise just print the node since it's not top 20 with the previous rank now as 0
         else:
             print_node((node_id, pagerank, 0, out_neighbors), node_list)
@@ -74,9 +74,10 @@ for line in sys.stdin:
 # Now that we have the top 20, check if those pageranks are the same as before, if so, we have found the final rankings
 done = True
 diff_pageranks = 0
-for i in range(0, 20):
+
+for i in range(0, len(top_30)):
     # Get the node
-    node = top_20[i]
+    node = top_30[i]
 
     # Get the more specific traits
     node_id = node[0]
@@ -91,7 +92,8 @@ for i in range(0, 20):
 
 # If we're actually done, print out the final rankings
 if done:
-    for node in top_20:
+    for i in range(0, 20):
+        node = top_30[i]
         print_final(node)
 else:
     print_nodes(node_list)
