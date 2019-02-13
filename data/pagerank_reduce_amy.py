@@ -23,9 +23,9 @@ for line in sys.stdin:
         in_neighbor = int((line.split(":")[1].split(",")[0]))
         pagerank = float((line.split(":")[1].split(",")[1]))
         if node_pageranks.get(node_id) == None:
-            node_pageranks[node_id] = pagerank
+            node_pageranks[node_id] = .85 * pagerank + .15
         else:
-            node_pageranks[node_id] += pagerank
+            node_pageranks[node_id] += pagerank * .85
 
         if node_outneighbors.get(in_neighbor) == None:
             node_outneighbors[in_neighbor] = [node_id]

@@ -7,16 +7,21 @@ import sys
 #
 
 # Prints a tuple of form (node_id, pagerank, prev_rank, out_neighbors)
-def print_node(node):
+def print_node(node, node_list):
     node_id = node[0]
     pagerank = node[1]
     prev_rank = node[2]
     out_neighbors = node[3]
 
     if(len(out_neighbors) > 0):
-        sys.stdout.write("NodeId:" + str(node_id) + "\t" + str(pagerank) + "," + str(prev_rank) + "," + ",".join(out_neighbors))
+        node_list.append("NodeId:" + str(node_id) + "\t" + str(pagerank) + "," + str(prev_rank) + "," + ",".join(out_neighbors))
     else:
-        sys.stdout.write("NodeId:" + str(node_id) + "\t" + str(pagerank) + "," + str(prev_rank) + "\n")
+        node_list.append("NodeId:" + str(node_id) + "\t" + str(pagerank) + "," + str(prev_rank) + "\n")
+
+# Print entire list
+def print_nodes(node_list):
+    for line in node_list:
+        sys.stdout.write(line)
 
 # Prints the final rankings
 def print_final(node):
@@ -29,6 +34,7 @@ def print_final(node):
 
 top_20 = []
 current_min = 0
+node_list = []
 for line in sys.stdin:
     sys.stderr.write("Current min: " + str(current_min) + "\n")
      # Grab the node_id and the values from stdin
@@ -63,7 +69,7 @@ for line in sys.stdin:
             top_20 = sorted(top_20, key = lambda node:node[1], reverse=True)
         # Otherwise just print the node since it's not top 20 with the previous rank now as 0
         else:
-            print_node((node_id, pagerank, 0, out_neighbors))
+            print_node((node_id, pagerank, 0, out_neighbors), node_list)
 
 # Now that we have the top 20, check if those pageranks are the same as before, if so, we have found the final rankings
 done = True
@@ -81,10 +87,11 @@ for i in range(0, 20):
     if prev_rank != i + 1:
         done = False
 
-    print_node((node_id, pagerank, i + 1, out_neighbors))
+    print_node((node_id, pagerank, i + 1, out_neighbors), node_list)
 
 # If we're actually done, print out the final rankings
 if done:
     for node in top_20:
         print_final(node)
-
+else:
+    print_nodes(node_list)
