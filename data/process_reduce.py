@@ -103,12 +103,10 @@ for x in range(0, len(top_40)):
 
 # If we're actually done, print out the final rankings
 if (done and change < .0001) or i == 49:
-    sys.stderr.write("Change: " + str(change) + "\n")
     for x in range(0, 20):
         node = top_40[x]
         print_final(node)
 else:
-    sys.stderr.write("Change: " + str(change) + "\n")
     print_nodes(node_list)
     # Pass along the iteration number
     sys.stdout.write("$\t%d\n" % (i + 1))
