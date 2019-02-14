@@ -22,21 +22,28 @@ for line in sys.stdin:
     # This is the previous ranking, which is either an int from 1-40 or 0
     prev_rank = int(float(vals[1]))
 
-    out_neighbors = vals[2:]
+    # These are the outneighbors
+    out_neighbors = []
+    
+    if(len(vals) > 2):
+        out_neighbors = [int(x) for x in vals[2:]]
 
     # This is how much of the pagerank this node gives to each of its neighbors
     contrib = pagerank
     if (len(out_neighbors) != 0):
         contrib = contrib / len(out_neighbors)
     else:
-        sys.stdout.write(str(node_id) + ":" + str(node_id) + "," + str(contrib) + "\n")
+        out_neighbors.append(str(node_id))
 
     # For each neighbor, output neighbor_id    node_id,rank
     for neighbor in out_neighbors:
-        sys.stdout.write(str(int(neighbor)) + ":" + str(node_id) + "," + str(contrib) + "\n")
+        sys.stdout.write(str(int(neighbor)) + ":" + str(node_id) + "," + 
+                         str(contrib) + "\n")
 
     # For this node, output node_id    -1,prev_rank
-    sys.stdout.write(str(node_id) + ":-1," + str(prev_rank) + "\n")
+    sys.stdout.write(str(node_id) + ":-1," + str(prev_rank) + "," + 
+                     str(pagerank) + "," + ",".join([str(x) for x in out_neighbors]) 
+                     + "\n")
 
 # Pass along the iteration number
 sys.stdout.write("$\t%d\n" % (i))

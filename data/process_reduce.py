@@ -23,8 +23,6 @@ def print_nodes(node_list):
 def print_final(node):
     node_id = node[0]
     pagerank = node[1]
-    prev_rank = node[2]
-    out_neighbors = node[3]
 
     sys.stdout.write("FinalRank:" + str(pagerank) + "\t" + str(node_id) + "\n")
 
@@ -33,6 +31,8 @@ i_prefix = "$"
 top_40 = []
 current_min = 0
 node_list = []
+total = 0
+total_change = 0
 for line in sys.stdin:
     # Get the iteration number if we see it
     if line.startswith(i_prefix):
@@ -51,9 +51,16 @@ for line in sys.stdin:
     
     # This is the previous ranking, which is either an int from 1-40 or 0
     prev_rank = int(vals[2])
+
+    # This is the previous pagerank
+    prev_pagerank = float(vals[3])
+
+    total += prev_pagerank
+    total_change += abs(pagerank - prev_pagerank)
+
     out_neighbors = []
-    if(len(vals) > 3):
-        out_neighbors = vals[3:]
+    if(len(vals) > 4):
+        out_neighbors = vals[4:]
    
 
     if len(top_40) < 40:
@@ -77,6 +84,7 @@ for line in sys.stdin:
 # Now that we have the top 40, check if those pageranks are the same as before, if so, we have found the final rankings
 done = True
 diff_pageranks = 0
+change = total_change / total
 
 for x in range(0, len(top_40)):
     # Get the node
@@ -94,11 +102,13 @@ for x in range(0, len(top_40)):
     print_node((node_id, pagerank, x + 1, out_neighbors), node_list)
 
 # If we're actually done, print out the final rankings
-if done or i == 0:
+if (done and change < .0001) or i == 49:
+    sys.stderr.write("Change: " + str(change) + "\n")
     for x in range(0, 20):
         node = top_40[x]
         print_final(node)
 else:
+    sys.stderr.write("Change: " + str(change) + "\n")
     print_nodes(node_list)
     # Pass along the iteration number
     sys.stdout.write("$\t%d\n" % (i + 1))

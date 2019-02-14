@@ -14,7 +14,6 @@ for line in sys.stdin:
     if line.startswith(i_prefix):
         i = int(line.split("\t")[1])
         continue
-
     # Grab the node_id 
     node_id = int((line.split(":")[0]))
 

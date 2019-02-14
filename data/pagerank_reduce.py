@@ -10,6 +10,7 @@ import sys
 node_pageranks = {}
 node_outneighbors = {}
 node_prevranks = {}
+node_prevpageranks = {}
 alpha = .85
 i = None
 i_prefix = "$"
@@ -32,29 +33,30 @@ for line in sys.stdin:
         else:
             node_pageranks[node_id] += pagerank * alpha
 
-        if node_outneighbors.get(in_neighbor) == None:
-            node_outneighbors[in_neighbor] = [node_id]
-        else:
-            node_outneighbors[in_neighbor].append(node_id)
 
     # If this was to record previous rank, record the previous rank again
     else:
         prev_rank = int((line.split(":")[1].split(",")[1]))
+        prev_pagerank = float((line.split(":")[1].split(",")[2]))
+        out_neighbors = line.split(":")[1].split(",")[3:]
+
         node_prevranks[node_id] = prev_rank
+        node_prevpageranks[node_id] = prev_pagerank
+        node_outneighbors[node_id] = [int(x) for x in out_neighbors]
 
 # For each key reduced on, output the node_id    pagerank,prev_rank,out_neighbors
 for node_id in node_prevranks.keys():
     if node_outneighbors.get(node_id) != None and node_pageranks.get(node_id) != None:
         sys.stdout.write(str(node_id) + ":" + str(node_pageranks[node_id]) + "," + 
-                     str(node_prevranks[node_id]) + "," + 
+                     str(node_prevranks[node_id]) + "," + str(node_prevpageranks[node_id]) + "," + 
                      ",".join([str(x) for x in node_outneighbors[node_id]]) + "\n")
     else:
         if node_outneighbors.get(node_id) == None and node_pageranks.get(node_id) != None:
             sys.stdout.write(str(node_id) + ":" + str(node_pageranks[node_id]) + "," + 
-                     str(node_prevranks[node_id]) + "\n")
+                     str(node_prevranks[node_id]) + str(node_prevpageranks[node_id]) + "," + "\n")
         if node_pageranks.get(node_id) == None and node_outneighbors.get(node_id) != None:
             sys.stdout.write(str(node_id) + ":" + str(1 - alpha) + "," + 
-                     str(node_prevranks[node_id]) + "," + 
+                     str(node_prevranks[node_id]) + "," + str(node_prevpageranks[node_id]) + "," + 
                      ",".join([str(x) for x in node_outneighbors[node_id]]) + "\n")
 
 # Pass along the iteration number
