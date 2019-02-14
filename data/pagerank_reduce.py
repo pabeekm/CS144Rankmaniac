@@ -11,7 +11,7 @@ node_pageranks = {}
 node_outneighbors = {}
 node_prevranks = {}
 alpha = .85
-i = 0
+i = None
 i_prefix = "$"
 
 for line in sys.stdin:
@@ -58,4 +58,5 @@ for node_id in node_prevranks.keys():
                      ",".join([str(x) for x in node_outneighbors[node_id]]) + "\n")
 
 # Pass along the iteration number
-sys.stdout.write("$\t%d\n" % (i))
+if i is not None:
+    sys.stdout.write("$\t%d\n" % (i))

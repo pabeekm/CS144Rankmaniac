@@ -6,7 +6,7 @@ import sys
 # This program simply represents the identity function.
 #
 
-i = 0
+i = None
 i_prefix = "$"
 
 for line in sys.stdin:
@@ -23,4 +23,5 @@ for line in sys.stdin:
     sys.stdout.write("key:" + str(node_id) + "," + line.split(":")[1])
 
 # Pass along the iteration number
-sys.stdout.write("$\t%d\n" % (i))
+if i is not None:
+    sys.stdout.write("$\t%d\n" % (i))

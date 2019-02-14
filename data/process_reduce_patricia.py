@@ -75,7 +75,7 @@ for x in range(0, len(highest)):
 
 # Print the highest values if we are done
 i += 1
-if (i == 50):
+if (i == 1):
     for id in highest:
         sys.stdout.write("FinalRank:%.1f\t%d\n" % (ranks[id], id))
 

@@ -39,7 +39,7 @@ for line in sys.stdin:
         i = int(line.split("\t")[1])
         continue
 
-    sys.stderr.write("Current min: " + str(current_min) + "\n")
+    #sys.stderr.write("Current min: " + str(current_min) + "\n")
      # Grab the node_id and the values from stdin
     vals = (line.split(":")[1].split(","))
 
@@ -63,7 +63,7 @@ for line in sys.stdin:
         top_40 = sorted(top_40, key = lambda node:node[1], reverse=True)
     else:
         # If this belongs in the top 40, then kick out the bottom element and put it in and then sort
-        sys.stderr.write("Pagerank: " + str(pagerank) + "\n")
+        # sys.stderr.write("Pagerank: " + str(pagerank) + "\n")
         if pagerank > current_min:
             kicked_out = top_40.pop()
             print_node(kicked_out, node_list)
@@ -94,7 +94,7 @@ for x in range(0, len(top_40)):
     print_node((node_id, pagerank, x + 1, out_neighbors), node_list)
 
 # If we're actually done, print out the final rankings
-if done or i == 49:
+if done or i == 0:
     for x in range(0, 20):
         node = top_40[x]
         print_final(node)
