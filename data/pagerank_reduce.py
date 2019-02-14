@@ -49,10 +49,10 @@ for node_id in node_prevranks.keys():
                      str(node_prevranks[node_id]) + "," + 
                      ",".join([str(x) for x in node_outneighbors[node_id]]) + "\n")
     else:
-        if node_outneighbors.get(node_id) == None:
+        if node_outneighbors.get(node_id) == None and node_pageranks.get(node_id) != None:
             sys.stdout.write(str(node_id) + ":" + str(node_pageranks[node_id]) + "," + 
                      str(node_prevranks[node_id]) + "\n")
-        if node_pageranks.get(node_id) == None:
+        if node_pageranks.get(node_id) == None and node_outneighbors.get(node_id) != None:
             sys.stdout.write(str(node_id) + ":" + str(1 - alpha) + "," + 
                      str(node_prevranks[node_id]) + "," + 
                      ",".join([str(x) for x in node_outneighbors[node_id]]) + "\n")
