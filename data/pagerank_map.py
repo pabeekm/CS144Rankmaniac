@@ -35,12 +35,12 @@ for line in sys.stdin:
     else:
         out_neighbors.append(str(node_id))
 
-    # For each neighbor, output neighbor_id    node_id,rank
+    # For each neighbor, output neighbor_id:	node_id, pagerank
     for neighbor in out_neighbors:
         sys.stdout.write(str(int(neighbor)) + ":\t" + str(node_id) + "," + 
                          str(contrib) + "\n")
 
-    # For this node, output node_id    -1,prev_rank
+    # For this node, output node_id:	-1,prev_ranking,pagerank,neighbors
     sys.stdout.write(str(node_id) + ":\t-1," + str(prev_rank) + "," + 
                      str(pagerank) + "," + ",".join([str(x) for x in out_neighbors]) 
                      + "\n")

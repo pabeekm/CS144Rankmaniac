@@ -24,7 +24,7 @@ for line in sys.stdin:
     # Get the node_id
     node_id = int((line.split(":")[0]))
 
-    # If this was a pagerank contribution, then record the this node as an outneighbor for another node and add to the current pagerarnk
+    # If this was a pagerank contribution, then add to the node's current pagerarnk
     if int((line.split(":")[1].split(",")[0])) != -1:
         in_neighbor = int((line.split(":")[1].split(",")[0]))
         pagerank = float((line.split(":")[1].split(",")[1]))
@@ -44,7 +44,7 @@ for line in sys.stdin:
         node_prevpageranks[node_id] = prev_pagerank
         node_outneighbors[node_id] = [int(x) for x in out_neighbors]
 
-# For each key reduced on, output the node_id    pagerank,prev_rank,out_neighbors
+# For each key reduced on, output the node_id:    pagerank,prev_ranking,prev_pagerank,out_neighbors
 for node_id in node_prevranks.keys():
     if node_outneighbors.get(node_id) != None and node_pageranks.get(node_id) != None:
         sys.stdout.write(str(node_id) + ":\t" + str(node_pageranks[node_id]) + "," + 
