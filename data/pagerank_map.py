@@ -37,11 +37,11 @@ for line in sys.stdin:
 
     # For each neighbor, output neighbor_id    node_id,rank
     for neighbor in out_neighbors:
-        sys.stdout.write(str(int(neighbor)) + ":" + str(node_id) + "," + 
+        sys.stdout.write(str(int(neighbor)) + ":\t" + str(node_id) + "," + 
                          str(contrib) + "\n")
 
     # For this node, output node_id    -1,prev_rank
-    sys.stdout.write(str(node_id) + ":-1," + str(prev_rank) + "," + 
+    sys.stdout.write(str(node_id) + ":\t-1," + str(prev_rank) + "," + 
                      str(pagerank) + "," + ",".join([str(x) for x in out_neighbors]) 
                      + "\n")
 

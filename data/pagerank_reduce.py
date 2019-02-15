@@ -47,15 +47,7 @@ for line in sys.stdin:
 # For each key reduced on, output the node_id    pagerank,prev_rank,out_neighbors
 for node_id in node_prevranks.keys():
     if node_outneighbors.get(node_id) != None and node_pageranks.get(node_id) != None:
-        sys.stdout.write(str(node_id) + ":" + str(node_pageranks[node_id]) + "," + 
-                     str(node_prevranks[node_id]) + "," + str(node_prevpageranks[node_id]) + "," + 
-                     ",".join([str(x) for x in node_outneighbors[node_id]]) + "\n")
-    else:
-        if node_outneighbors.get(node_id) == None and node_pageranks.get(node_id) != None:
-            sys.stdout.write(str(node_id) + ":" + str(node_pageranks[node_id]) + "," + 
-                     str(node_prevranks[node_id]) + str(node_prevpageranks[node_id]) + "," + "\n")
-        if node_pageranks.get(node_id) == None and node_outneighbors.get(node_id) != None:
-            sys.stdout.write(str(node_id) + ":" + str(1 - alpha) + "," + 
+        sys.stdout.write(str(node_id) + ":\t" + str(node_pageranks[node_id]) + "," + 
                      str(node_prevranks[node_id]) + "," + str(node_prevpageranks[node_id]) + "," + 
                      ",".join([str(x) for x in node_outneighbors[node_id]]) + "\n")
 

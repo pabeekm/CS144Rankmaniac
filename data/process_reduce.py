@@ -39,8 +39,7 @@ for line in sys.stdin:
         i = int(line.split("\t")[1])
         continue
 
-    #sys.stderr.write("Current min: " + str(current_min) + "\n")
-     # Grab the node_id and the values from stdin
+    # Grab the node_id and the values from stdin
     vals = (line.split(":")[1].split(","))
 
     # This is the node_id
@@ -84,7 +83,9 @@ for line in sys.stdin:
 # Now that we have the top 40, check if those pageranks are the same as before, if so, we have found the final rankings
 done = True
 diff_pageranks = 0
-change = total_change / total
+change = 0
+if total != 0:
+    change = total_change / total
 
 for x in range(0, len(top_40)):
     # Get the node
