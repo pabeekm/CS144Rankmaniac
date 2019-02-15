@@ -19,7 +19,7 @@ for line in sys.stdin:
 
     # Now just use a generic key so the reducer can be in charge of sorting all output and
     # checking whether or not prev_ranks have changed
-    sys.stdout.write("key:" + str(node_id) + ",\t" + line.split(":")[1])
+    sys.stdout.write("key:" + str(node_id) + "," + line.split(":")[1])
 
 # Pass along the iteration number
 if i is not None:
