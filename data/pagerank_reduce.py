@@ -16,18 +16,23 @@ i = None
 i_prefix = "$"
 
 for line in sys.stdin:
+    # Remove the endline character
+    line = line[:-1]
+
     # Get the iteration number if we see it
     if line.startswith(i_prefix):
         i = int(line.split("\t")[1])
         continue
  
+    split = line.split(":")
+    split_comma = split[1].split(",")
+
     # Get the node_id
-    node_id = int((line.split(":")[0]))
+    node_id = split[0]
 
     # If this was a pagerank contribution, then add to the node's current pagerarnk
-    if int((line.split(":")[1].split(",")[0])) != -1:
-        in_neighbor = int((line.split(":")[1].split(",")[0]))
-        pagerank = float((line.split(":")[1].split(",")[1]))
+    if int(split_comma[0]) != -1:
+        pagerank = float(split_comma[1])
         if node_pageranks.get(node_id) == None:
             node_pageranks[node_id] = alpha * pagerank + (1 - alpha)
         else:
@@ -36,24 +41,24 @@ for line in sys.stdin:
 
     # If this was to record previous rank, record the previous rank again
     else:
-        prev_rank = int((line.split(":")[1].split(",")[1]))
-        prev_pagerank = float((line.split(":")[1].split(",")[2]))
-        out_neighbors = line.split(":")[1].split(",")[3:]
+        prev_rank = split_comma[1]
+        prev_pagerank = split_comma[2]
+        out_neighbors = split_comma[3:]
 
         node_prevranks[node_id] = prev_rank
         node_prevpageranks[node_id] = prev_pagerank
-        node_outneighbors[node_id] = [int(x) for x in out_neighbors]
+        node_outneighbors[node_id] = (",").join(out_neighbors)
 
 # For each key reduced on, output the node_id:    pagerank,prev_ranking,prev_pagerank,out_neighbors
 for node_id in node_prevranks.keys():
     if node_outneighbors.get(node_id) != None and node_pageranks.get(node_id) != None:
-        sys.stdout.write(str(node_id) + ":\t" + str(node_pageranks[node_id]) + "," + 
-                     str(node_prevranks[node_id]) + "," + str(node_prevpageranks[node_id]) + "," + 
-                     ",".join([str(x) for x in node_outneighbors[node_id]]) + "\n")
+        sys.stdout.write(node_id + ":\t" + str(node_pageranks[node_id]) + "," +
+                     node_prevranks[node_id] + "," + node_prevpageranks[node_id] + "," +
+                     node_outneighbors[node_id] + "\n")
     if node_outneighbors.get(node_id) != None and node_pageranks.get(node_id) == None:
-        sys.stdout.write(str(node_id) + ":\t" + str(1 - alpha) + "," +
-                     str(node_prevranks[node_id]) + "," + str(node_prevpageranks[node_id]) + "," +
-                     ",".join([str(x) for x in node_outneighbors[node_id]]) + "\n")
+        sys.stdout.write(node_id + ":\t" + str(1 - alpha) + "," +
+                     node_prevranks[node_id] + "," + node_prevpageranks[node_id] + "," +
+                     node_outneighbors[node_id] + "\n")
 
 # Pass along the iteration number
 if i is not None:

@@ -10,9 +10,9 @@ def print_node(node, node_list):
     out_neighbors = node[3]
 
     if(len(out_neighbors) > 0):
-        node_list.append("NodeId:" + str(node_id) + "\t" + str(pagerank) + "," + str(prev_rank) + "," + ",".join(out_neighbors))
+        node_list.append("NodeId:" + node_id + "\t" + str(pagerank) + "," + str(prev_rank) + "," + ",".join(out_neighbors) + "\n")
     else:
-        node_list.append("NodeId:" + str(node_id) + "\t" + str(pagerank) + "," + str(prev_rank) + "\n")
+        node_list.append("NodeId:" + node_id + "\t" + str(pagerank) + "," + str(prev_rank) + "\n")
 
 # Print entire list
 def print_nodes(node_list):
@@ -24,7 +24,7 @@ def print_final(node):
     node_id = node[0]
     pagerank = node[1]
 
-    sys.stdout.write("FinalRank:" + str(pagerank) + "\t" + str(node_id) + "\n")
+    sys.stdout.write("FinalRank:" + str(pagerank) + "\t" + node_id + "\n")
 
 i = 0
 i_prefix = "$"
@@ -34,6 +34,9 @@ node_list = []
 total = 0
 total_change = 0
 for line in sys.stdin:
+    # Remove the endline character
+    line = line[:-1]
+
     # Get the iteration number if we see it
     if line.startswith(i_prefix):
         i = int(line.split("\t")[1])
@@ -43,7 +46,7 @@ for line in sys.stdin:
     vals = (line.split(":")[1].split(","))
 
     # This is the node_id
-    node_id = int(vals[0])
+    node_id = vals[0]
 
     # This is the pagerank value
     pagerank = float(vals[1])
@@ -69,7 +72,6 @@ for line in sys.stdin:
         top_30 = sorted(top_30, key = lambda node:node[1], reverse=True)
     else:
         # If this belongs in the top 30, then kick out the bottom element and put it in and then sort
-        # sys.stderr.write("Pagerank: " + str(pagerank) + "\n")
         if pagerank > current_min:
             kicked_out = top_30.pop()
             print_node(kicked_out, node_list)
@@ -103,7 +105,7 @@ for x in range(0, len(top_30)):
     print_node((node_id, pagerank, x + 1, out_neighbors), node_list)
 
 # If we're actually done, print out the final rankings
-if (done and change < .0001) or i == 49:
+if done or i == 49:
     for x in range(0, 20):
         node = top_30[x]
         print_final(node)
