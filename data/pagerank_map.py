@@ -19,7 +19,7 @@ for line in sys.stdin:
     # This is the pagerank value
     pagerank = float(vals[0])
 
-    # This is the previous ranking, which is either an int from 1-40 or 0
+    # This is the previous ranking, which is either an int from 1-30 or 0
     prev_rank = int(float(vals[1]))
 
     # These are the outneighbors
@@ -36,9 +36,10 @@ for line in sys.stdin:
         out_neighbors.append(str(node_id))
 
     # For each neighbor, output neighbor_id:	node_id, pagerank
-    for neighbor in out_neighbors:
-        sys.stdout.write(str(int(neighbor)) + ":\t" + str(node_id) + "," + 
-                         str(contrib) + "\n")
+    if contrib >= .001:
+        for neighbor in out_neighbors:
+            sys.stdout.write(str(int(neighbor)) + ":\t" + str(node_id) + "," + 
+                             str(contrib) + "\n")
 
     # For this node, output node_id:	-1,prev_ranking,pagerank,neighbors
     sys.stdout.write(str(node_id) + ":\t-1," + str(prev_rank) + "," + 
